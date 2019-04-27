@@ -71,4 +71,13 @@ io.use((socket, next) => {
 io.sockets
     .on('connection', socket => {
         console.log(`New User Connected: ${socket.id}`);
+        
+        User.find()
+            .then(users => {
+                console.log(users);
+            });
+        
+        socket.on('disconnect', () => {
+            console.log(`${socket.id} has disconnected.`);
+        });
     });
