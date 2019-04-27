@@ -12,9 +12,7 @@
         <script>
             const socket = io.connect('http://localhost:8001');
 
-            function like() {
-                socket.emit('like', 'Someone likes someone.');
-            }
+            function like() { socket.emit('like', 'Someone likes someone.'); }
 
             socket.on('connect', () => console.log('Connected to socket.io server.'));
             socket.on('auth_fail', data => console.log(data));
