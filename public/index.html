@@ -5,11 +5,22 @@
     </head>
     <body>
         <h1>Welcome!!</h1>
+        <form method="get" action="/login">
+            <input type="submit" value="Login">
+        </form>
+        <button onclick="like()">Like</button>
         <script>
             const socket = io.connect('http://localhost:8001');
+
+            function like() {
+                socket.emit('like', 'Someone likes someone.');
+            }
+
             socket.on('connect', () => console.log('Connected to socket.io server.'));
             socket.on('auth_fail', data => console.log(data));
             socket.on('verified', data => console.log(data));
+            socket.on('current_users', current_users => console.log('current_users\n', current_users));
+            socket.on('update_users', current_users => console.log(current_users));
         </script>
     </body>
 </html>

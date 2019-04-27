@@ -45,7 +45,7 @@ app.get('/login', (req, res, next) => {
             res.sendStatus(500);
         }
         res.cookie('Bearer', token);
-        res.status(200).send('Cookie Sent');
+        res.redirect('/');
     });
 });
 
@@ -63,21 +63,36 @@ io.use((socket, next) => {
         } else {
             console.log(chalk.green.bold.underline('>>> Success - Authenticated <<<'));
             socket.emit('verified', payload);
+            socket.payload = payload;
             next();
         }
     }
 });
 
+// Keeping track of currently connected users.
+const current_users = {};
+
 io.sockets
     .on('connection', socket => {
         console.log(`New User Connected: ${socket.id}`);
-        
-        User.find()
-            .then(users => {
-                console.log(users);
-            });
+
+        // Adding new user to connected_users object.
+        current_users[socket.id] = socket.payload;
+
+        io.emit('current_users', current_users);
+
+        // Users from MongoDB.
+        // User.find()
+        //     .then(users => {
+        //         console.log(users);
+        //         socket.emit('online_users', users);
+        //     });
         
         socket.on('disconnect', () => {
             console.log(`${socket.id} has disconnected.`);
+            delete current_users[socket.id];
+            socket.broadcast.emit('update_users', current_users);
         });
+
+        socket.on('like', data => console.log(data));
     });
