@@ -8,7 +8,7 @@
         <script>
             const socket = io.connect('http://localhost:8001');
             socket.on('connect', () => console.log('Connected to socket.io server.'));
-            socket.on('error', data => console.log(data));
+            socket.on('auth_fail', data => console.log(data));
             socket.on('verified', data => console.log(data));
         </script>
     </body>

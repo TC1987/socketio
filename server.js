@@ -59,13 +59,13 @@ io.use((socket, next) => {
         let payload = null;
         if (!(payload = verifyToken(bearer))) {
             console.log(chalk.red.bold.underline('>>> Failure - Invalid Token <<<'));
-            socket.emit('error', 'Authentication Required');
+            socket.emit('auth_fail', 'Authentication Required');
         } else {
             console.log(chalk.green.bold.underline('>>> Success - Authenticated <<<'));
             socket.emit('verified', payload);
+            next();
         }
     }
-    next();
 });
 
 io.sockets
